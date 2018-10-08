@@ -1,0 +1,227 @@
+﻿@model practiceproject.Models.tbl_customer
+@{
+    ViewBag.Title = "updatecustomer";
+}
+<link href="~/jquery-validation-1.17.0/demo/css/screen.css" rel="stylesheet" />
+
+<form method="post" id="myForm" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Customer name</label>
+        <input type="text" class="form-control" value="@Model.CUSTOMER_NAME" name="CUSTOMER_NAME" id="customer_name" placeholder="Enter Customer Name" />
+    </div>
+   
+
+    <div class="form-group">
+        <label>Delivery Date</label>
+        <input type="text" value="@Model.DELIVERY_DATE" id="datepicker" class="form-control" name="DELIVERY_DATE" placeholder="Enter date" />
+    </div>
+
+    <div class="form-group">
+        <label>broker</label>
+        <input type="text" class="form-control" value="@Model.BROKER" name="BROKER" id="broker_name" placeholder="Enter Broker Name" />
+    </div>
+
+    <div class="form-group">
+        <label>file Upload</label>
+        <input type="file" class="form-control" value="@Model.FILE_UPLOAD" multiple="multiple" name="FILE_UPLOAD" id="file_upload" />
+    </div>
+
+
+    <table id="example" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="fileTable_info">
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="allcb" style="width:17px" class="form-control" /></th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Amount</th>
+
+        </thead>
+        <tbody>
+            @if(ViewBag.orderlist !=null)
+            { 
+            foreach(var item in ViewBag.orderlist)
+            {
+                <tr id="1" class="calculate_tr">
+                    <td><input type="checkbox" style="width:17px" class="form-control sel_cb del_cb" /></td>
+                    <td><input type="text" name="NAME"  class="form-control" value="@item.NAME" /></td>
+                    <td><input type="text" name="PRICE" @*onkeyup="calc(@item.ID)"*@ id="price_@item.ID" class="price form-control" value="@item.PRICE" /></td>
+                    <td><input type="text" name="QUANTITY" @*onkeyup="calc(@item.ID)"*@ id="quantity_@item.ID" class="quantity form-control" value="@item.QUANTITY" /></td>
+                    <td><input type="text" name="AMOUNT" id="total_amount_@item.ID" value="@item.AMOUNT" class="amount form-control" /></td>
+                </tr>
+            }
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td style="text-align:right" colspan="4">
+                    <strong>Total</strong>
+                </td>
+                <td> <input type="text" value="@Model.TOTAL" name="TOTAL" class="form-control" id="total" />   </td>
+            </tr>
+        </tfoot>
+
+    </table>
+    
+    <input type="button" value="Add row" id="addrow" class="btn btn-success pull-left" />
+    <input type="button" value="Deleterow" id="Deleterow" onclick="deletes()" class="btn btn-danger pull-left hidden" />
+    <input type="submit" value="UPDATE" class="btn btn-success pull-right" />
+
+</form>
+
+
+<script src="~/jquery-validation-1.17.0/lib/jquery.js"></script>
+<script src="~/jquery-validation-1.17.0/dist/jquery.validate.js"></script>
+
+<script src="~/Content/bootstrap-datepicker.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#myForm").validate({
+            rules: {
+                CUSTOMER_NAME: {
+                    required:true,
+                    minlength: 2
+
+                },
+                BROKER: {
+                    required: false,
+                    minlength: 2,
+                },
+                EMAIL: {
+                    required: false,
+                     email:true,
+                },
+                NAME: {
+                    required:true
+                },
+              
+               
+
+            },
+                //messages: {
+                //    CUSTOMER_NAME: {
+                //        required: "please enter a customername",
+                //        minlength: "Your customername must consist of at least 2 characters"
+                //    },
+                //    BR0KER: {
+                //        required: "please enter a brokername",
+                //        minlength: "Your brokername must consist of at least 2 characters"
+                //    },
+
+              //  }
+            });
+
+    });
+</script>
+<script>
+    $('#datepicker').datepicker({
+        format: 'dd/mm/yyyy'
+    });
+</script>
+<script>
+    var i = 2;
+    $("#addrow").on('click', function () {
+        var data = "<tr id='" + i + "' class='calculate_tr'><td><input type='checkbox' name='checkbox' style=width:17px id='checkbox-" + i + "' class='form-control sel_cb del_cb'/>";
+        data += "</td><td><input type='text' class='form-control' id='name" + i + "' name='NAME' required='required'/></td> <td><input type='number' class='price form-control'  id='price_" + i + "' name='PRICE'/></td><td><input type='number' class='quantity form-control' id='quantity_" + i + "' name='QUANTITY'/></td><td><input class='amount form-control' type='text' id='total_amount_" + i + "' name='AMOUNT'/></td></tr>";
+        $('#example').append(data);
+        i++;
+    });
+// var i=2;
+// $("#addrow").on('click', function () {
+//     var data = "<tr id='" + i + "' class='calculate_tr'><td><input type='checkbox' name='checkbox' style=width:17px id='checkbox-" + i + "' class='form-control sel_cb del_cb'/>";
+//     data += "</td><td><input type='text' class='form-control' id='name" + i + "' name='NAME'/></td> <td><input type='number' class='form-control'  id='price_" + i + "' name='PRICE'/></td><td><input type='number'  class='form-control' id='quantity_" + i + "' name='QUANTITY'/></td><td><input class='form-control' type='text' id='total_amount_" + i + "' name='TOTAL_AMOUNT1'/></td></tr>";
+//       $('table').append(data);
+//       i++;
+//});
+</script>
+
+<script type="text/javascript">
+    
+    $("body").delegate(".price, .quantity", "change", function () {
+        var price = $(this).closest("tr").find(".price").val();
+        var quantity = $(this).closest("tr").find(".quantity").val();
+        var total = price * quantity;
+        $(this).closest("tr").find(".amount").val(parseFloat(total).toFixed(2));
+        
+        var total_amount = 0;
+        $(".calculate_tr").each(function (el, index) {
+
+            var amt = $(this).find(".amount").val();
+            total_amount = total_amount + getFloat(amt);
+        });
+
+        $("#total").val(total_amount);
+    });
+
+    function getFloat(val) {
+        if (val == '') {
+            return 0;
+        } else {
+            return parseFloat(val);
+        }
+    }
+//function findTotal(){
+//    var arr = document.getElementsByName('TOTAL_AMOUNT1');
+//    var tot=0;
+//    for(var i=0;i<arr.length;i++){
+//        if(parseInt(arr[i].value))
+//            tot += parseInt(arr[i].value);
+//    }
+//    document.getElementById('total').value = tot;
+//}
+</script>
+
+
+@*<script>
+    function calc(id)
+    {
+      
+
+        var textValue1 = document.getElementById('price_' + id).value;
+        var textValue2 = document.getElementById('quantity_' +id).value;
+        document.getElementById('total_amount_' + id).value = textValue1 * textValue2;
+        findTotal();
+    }
+</script>*@
+
+
+<script>
+    $("body").delegate(".sel_cb", "change", function () {
+
+        var cb_count = $('input:checkbox.sel_cb:checked').length;
+
+        if (cb_count != 0)
+        {
+            $("#Deleterow").removeClass("hidden");
+        }
+        else{
+            $("#Deleterow").addClass("hidden");
+        }
+    });
+
+</script>
+
+
+<script>
+    $('#allcb').change(function () {
+        if ($(this).prop('checked')) {
+            $('tbody tr td input[type="checkbox"]').each(function () {
+                $(this).prop('checked', true);
+                $("#Deleterow").removeClass("hidden");
+            });
+        } else {
+            $('tbody tr td input[type="checkbox"]').each(function () {
+                $(this).prop('checked', false);
+                $("#Deleterow").addClass("hidden");
+            });
+        }
+    });
+</script>
+
+<script>
+    function deletes()
+    {
+        $('input:checkbox:checked').parents("tr").remove();
+        $('.price').trigger('change');
+    }
+</script>

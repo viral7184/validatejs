@@ -1,0 +1,92 @@
+﻿
+@{
+    ViewBag.Title = "validatejs";
+   
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>jQuery validation plug-in - main demo</title>
+
+    <link href="~/jquery-validation-1.17.0/demo/css/screen.css" rel="stylesheet" />
+    
+</head> 
+<body>
+    <form method="post" id="myForm">
+        <div class="form-group">
+            <label>Customer name</label>
+            <input type="text" class="form-control" name="CUSTOMER_NAME" id="customer_name" placeholder="Enter Customer Name" />
+        </div>
+
+        <div class="form-group">
+            <label>Delivery Date</label>
+            <input type="date" class="form-control" name="DELIVERY_DATE" placeholder="Enter date" />
+        </div>
+
+        <div class="form-group">
+            <label>broker</label>
+            <input type="text" class="form-control" name="BROKER" id="broker_name" placeholder="Enter Broker Name" />
+        </div>
+
+
+        <table id="example" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="fileTable_info">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="allcb" style="width:17px" class="form-control" /></th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Amount</th>
+
+            </thead>    
+            <tbody>
+
+                <tr id="1">
+                    <td><input type="checkbox" style="width:17px" class="form-control sel_cb del_cb" /></td>
+                    <td><input type="text" name="NAME" class="form-control" /></td>
+                    <td><input type="number" name="PRICE" onkeyup="calc(1)" id="price_1" class="form-control" /></td>
+                    <td><input type="number" name="QUANTITY" onkeyup="calc(1)" id="quantity_1" class="form-control" /></td>
+                    <td><input type="text" name="TOTAL_AMOUNT1" id="total_amount_1" class="form-control" /></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td style="text-align:right" colspan="4">
+                        <strong>Total</strong>
+                    </td>
+                    <td> <input type="text" name="TOTAL" class="form-control" id="total" />   </td>
+                </tr>
+            </tfoot>
+
+        </table>
+        <input type="button" value="Add row" id="addrow" class="btn btn-success pull-left" />
+        <input type="button" value="Deleterow" id="Deleterow" onclick="deletes(), findTotal()" class="btn btn-danger pull-left hidden" />
+        <input type="submit" value="Save" class="btn btn-success pull-right" />
+
+    </form>
+</body>
+</html>
+<script src="~/jquery-validation-1.17.0/lib/jquery.js"></script>
+<script src="~/jquery-validation-1.17.0/dist/jquery.validate.js"></script>
+@*<script src="~/jquery-validation-1.17.0/dist/jquery.validate.min.js"></script>*@
+<script>
+    $(document).ready(function () {
+        $("#myForm").validate({
+            rules: {
+                CUSTOMER_NAME: {
+                    required:true,
+                    minlength: 2
+                },
+                BROKER: {
+                    required: true,
+                    minlength: 2
+                },
+            },
+           
+            });
+
+    });
+</script>
+
